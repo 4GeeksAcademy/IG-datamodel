@@ -7,23 +7,73 @@ from eralchemy2 import render_er
 
 Base = declarative_base()
 
-class Person(Base):
-    __tablename__ = 'person'
+class User(Base):
+    __tablename__ = 'user'
     # Here we define columns for the table person
     # Notice that each column is also a normal Python instance attribute.
     id = Column(Integer, primary_key=True)
-    name = Column(String(250), nullable=False)
+    name = Column(String(20), nullable=False)
+    lastName = Column(String(60), nullable=False)
+    birthDate = Column(String(10), nullable=False)
+    phone = Column(Integer, nullable=False)
+    email = Column(String(50), nullable=False)
+    password = Column(String(20), nullable=False)
+    identity = Column(String(20), nullable=False)
+    publication_id =  Column(Integer, ForeignKey('Publications.id'))
+    story = Column(Integer, ForeignKey('Storys.id'))
+    other_accounts = Column(Integer, ForeignKey('Other_accounts.id'))
 
-class Address(Base):
-    __tablename__ = 'address'
-    # Here we define columns for the table address.
-    # Notice that each column is also a normal Python instance attribute.
+
+class Other_Acounts(Base):
+    __tablename__ = 'other_acounts'
     id = Column(Integer, primary_key=True)
-    street_name = Column(String(250))
-    street_number = Column(String(250))
-    post_code = Column(String(250), nullable=False)
-    person_id = Column(Integer, ForeignKey('person.id'))
-    person = relationship(Person)
+    twitter = Column(String)
+    whastapp = Column(Integer)
+    facebook = Column(String(50))
+    misc = Column(String(50))
+
+class Commentarys(Base): 
+    __tablename__ = 'commentarys'
+    id = Column(Integer, primary_key=True, ForeignKey='User.id')
+    text = Column(String(250))
+
+
+class Publications(Base):
+    __tablename__ = 'publications'
+    id = Column(Integer, primary_key=True)
+    src = Column(String, nullable=False)
+    description = Column(String)
+
+class Storys(Base):
+    __tablename__ = 'storys'
+    id = Column(Integer,primary_key=True)
+    src = Column(String(100))
+
+class Notifications(Base):
+    __tablename__ = 'notifications'
+    id = Column(Integer, primary_key=True, ForeignKey='User.id')
+    id_origin = Column(Integer)
+    id_destination = Column(Integer)
+    type = Column(String)
+
+class NotificationType(Base):
+    __tablename__ = 'notification_type'
+    like = Column(bool, ForeignKey='Notifications.type')
+    new_follower = Column(int, ForeignKey='Notifications.type')
+    mention = Column(Integer, ForeignKey='Notifications.type')
+    collaborator = Column(Integer, ForeignKey='Notifications.type')
+                  
+
+class Followers(Base):
+    __tablename__ = 'followers'
+    
+    user_from_id = Column(bool, ForeignKey='User.id')
+    user_to_id = Column(bool, ForeignKey='User.id')
+
+
+
+
+
 
     def to_dict(self):
         return {}
