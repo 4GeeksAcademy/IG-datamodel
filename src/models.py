@@ -11,7 +11,7 @@ class User(Base):
     __tablename__ = 'user'
     # Here we define columns for the table person
     # Notice that each column is also a normal Python instance attribute.
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, unique=True)
     name = Column(String(20), nullable=False)
     lastName = Column(String(60), nullable=False)
     birthDate = Column(String(10), nullable=False)
@@ -19,22 +19,26 @@ class User(Base):
     email = Column(String(50), nullable=False)
     password = Column(String(20), nullable=False)
     identity = Column(String(20), nullable=False)
-    publication_id =  Column(Integer, ForeignKey('Publications.id'))
-    story = Column(Integer, ForeignKey('Storys.id'))
-    other_accounts = Column(Integer, ForeignKey('Other_accounts.id'))
+    publication_id =  Column(Integer, ForeignKey('publications.id'))
+    story = Column(Integer, ForeignKey('storys.id'))
+    whatsapp = Column(String(50))
+    facebook = Column(String(50))
+    twitter_account = Column(String(50))
 
 
 class Other_Acounts(Base):
     __tablename__ = 'other_acounts'
     id = Column(Integer, primary_key=True)
-    twitter = Column(String)
-    whastapp = Column(Integer)
-    facebook = Column(String(50))
-    misc = Column(String(50))
+    twitter = Column(String(50), ForeignKey('user.twitter'))
+    whastapp = Column(Integer, ForeignKey('user.whatasapp'))
+    facebook = Column(String(50), ForeignKey('user.facebook'))
+   
 
 class Commentarys(Base): 
     __tablename__ = 'commentarys'
-    id = Column(Integer, primary_key=True, ForeignKey='User.id')
+    id = Column(Integer, primary_key=True)
+    user_comment = Column(String(250), ForeignKey('user.id'))
+    publication = Column(String(250), ForeignKey('publications.id')) 
     text = Column(String(250))
 
 
@@ -47,28 +51,22 @@ class Publications(Base):
 class Storys(Base):
     __tablename__ = 'storys'
     id = Column(Integer,primary_key=True)
-    src = Column(String(100))
+    src = Column(String(100), nullable=False)
 
 class Notifications(Base):
     __tablename__ = 'notifications'
-    id = Column(Integer, primary_key=True, ForeignKey='User.id')
-    id_origin = Column(Integer)
-    id_destination = Column(Integer)
-    type = Column(String)
+    id = Column(Integer, primary_key=True)
+    user_notification = Column(String(250), ForeignKey('user.id'))
+    id_origin = Column(Integer, unique=True)
+    id_destination = Column(Integer, unique=True)
+    type = Column(String(250), nullable=False)
 
-class NotificationType(Base):
-    __tablename__ = 'notification_type'
-    like = Column(bool, ForeignKey='Notifications.type')
-    new_follower = Column(int, ForeignKey='Notifications.type')
-    mention = Column(Integer, ForeignKey='Notifications.type')
-    collaborator = Column(Integer, ForeignKey='Notifications.type')
-                  
 
 class Followers(Base):
     __tablename__ = 'followers'
-    
-    user_from_id = Column(bool, ForeignKey='User.id')
-    user_to_id = Column(bool, ForeignKey='User.id')
+    folloers_id = Column(Integer, primary_key=True)
+    user_from_id = Column(Integer, ForeignKey('user.id'))
+    user_to_id = Column(Integer, ForeignKey('user.id'))
 
 
 
