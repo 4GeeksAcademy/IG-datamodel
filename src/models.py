@@ -18,21 +18,11 @@ class User(Base):
     phone = Column(Integer, nullable=False)
     email = Column(String(50), nullable=False)
     password = Column(String(20), nullable=False)
-    identity = Column(String(20), nullable=False)
-    publication_id =  Column(Integer, ForeignKey('publications.id'))
-    story = Column(Integer, ForeignKey('storys.id'))
+    username = Column(String(20), nullable=False)
     whatsapp = Column(String(50))
     facebook = Column(String(50))
-    twitter_account = Column(String(50))
+    twitter = Column(String(50))
 
-
-class Other_Acounts(Base):
-    __tablename__ = 'other_acounts'
-    id = Column(Integer, primary_key=True)
-    twitter = Column(String(50), ForeignKey('user.twitter'))
-    whastapp = Column(Integer, ForeignKey('user.whatasapp'))
-    facebook = Column(String(50), ForeignKey('user.facebook'))
-   
 
 class Commentarys(Base): 
     __tablename__ = 'commentarys'
@@ -47,11 +37,13 @@ class Publications(Base):
     id = Column(Integer, primary_key=True)
     src = Column(String, nullable=False)
     description = Column(String)
+    user_id = Column(Integer, ForeignKey('user.id'))
 
 class Storys(Base):
     __tablename__ = 'storys'
     id = Column(Integer,primary_key=True)
     src = Column(String(100), nullable=False)
+    user_id = Column(Integer, ForeignKey('user.id'))
 
 class Notifications(Base):
     __tablename__ = 'notifications'
